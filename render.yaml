@@ -1,0 +1,35 @@
+# ── Render deployment for MUSK Store ────────────────────────────────────────
+# Connect this repo on Render and it will use this blueprint.
+# Set the required secret values in the Render dashboard after deploy.
+
+services:
+  - type: web
+    name: musk-store
+    runtime: node
+    region: oregon
+    plan: free
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    healthCheckPath: /api/health
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: "10000"
+      # Generate a strong secret automatically
+      - key: SESSION_SECRET
+        generateValue: true
+      # Set these in the Render dashboard (secret, sync: false)
+      - key: ADMIN_PASSWORD
+        sync: false
+      - key: ADMIN_GMAIL_1
+        sync: false
+      - key: ADMIN_GMAIL_2
+        sync: false
+      - key: DATABASE_URL
+        sync: false
+      - key: ALLOWED_ORIGINS
+        sync: false
+      - key: GEMINI_API_KEY
+        sync: false

@@ -1,0 +1,6 @@
+{
+  "name": "MUSK",
+  "description": "MUSK - Technology for Smartness. A premium, minimal, Apple-inspired gadgets & accessories e-commerce store.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
