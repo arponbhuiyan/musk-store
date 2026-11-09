@@ -164,11 +164,18 @@ async function initDB() {
     return;
   }
   try {
+    // Parse DATABASE_URL manually so ssl options are reliably applied
+    const dbUrl = new URL(DATABASE_URL);
     dbPool = mysql.createPool({
-      uri: DATABASE_URL,
-      ssl: { rejectUnauthorized: true },
+      host: dbUrl.hostname,
+      port: parseInt(dbUrl.port || "3306", 10),
+      user: decodeURIComponent(dbUrl.username),
+      password: decodeURIComponent(dbUrl.password),
+      database: dbUrl.pathname.slice(1) || "test",
+      ssl: { rejectUnauthorized: true, minVersion: "TLSv1.2" },
       waitForConnections: true,
       connectionLimit: 10,
+      enableKeepAlive: true,
     });
     await dbPool.query(KV_TABLE_SQL);
     settingsCache = await dbLoad<Settings>("settings", { ...DEFAULT_SETTINGS });
