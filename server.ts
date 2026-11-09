@@ -164,7 +164,12 @@ async function initDB() {
     return;
   }
   try {
-    dbPool = mysql.createPool(DATABASE_URL);
+    dbPool = mysql.createPool({
+      uri: DATABASE_URL,
+      ssl: { rejectUnauthorized: true },
+      waitForConnections: true,
+      connectionLimit: 10,
+    });
     await dbPool.query(KV_TABLE_SQL);
     settingsCache = await dbLoad<Settings>("settings", { ...DEFAULT_SETTINGS });
     analyticsCache = await dbLoad<Analytics>("analytics", { ...DEFAULT_ANALYTICS });
