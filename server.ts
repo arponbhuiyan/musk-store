@@ -366,7 +366,13 @@ async function startServer() {
   app.set("trust proxy", 1);
 
   // ─── Public routes ────────────────────────────────────────────────────────
-  app.get("/api/health", (_req, res) => res.json({ status: "ok", uptime: process.uptime() }));
+  app.get("/api/health", (_req, res) =>
+    res.json({
+      status: "ok",
+      uptime: process.uptime(),
+      storage: dbPool ? "mysql" : DATABASE_URL ? "mysql-disconnected" : "json-files",
+    }),
+  );
 
   // Track admin login audit (called from client-side login form — public write)
   app.post("/api/analytics/track-login", (req, res) => {
